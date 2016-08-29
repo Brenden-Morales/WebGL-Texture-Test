@@ -50,6 +50,7 @@
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
         var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         var cube = new THREE.Mesh( geometry, material );
+        cube.position.x = 1;
         scene.add( cube );
 
         var planeMaterial;
@@ -58,6 +59,7 @@
             var planeGeom = new THREE.PlaneGeometry(1,1,1);
             planeMaterial = new THREE.MeshBasicMaterial({map: tex});
             var plane = new THREE.Mesh(planeGeom, planeMaterial);
+            plane.position.x = -1;
             scene.add(plane);
         } );
 
