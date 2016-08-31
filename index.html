@@ -68,13 +68,18 @@
         camera.position.z = 5;
 
         var render = function () {
-            requestAnimationFrame( render );
+
+            var start = Date.now();
+
             fibonacci(30);
 
             cube.rotation.x += 0.1;
             cube.rotation.y += 0.1;
 
             renderer.render(scene, camera);
+            var delta = Date.now() - start;
+            delta = delta < 16 ? 16 - delta : 0;
+            setTimeout( render, delta);
         };
 
         //make the main thread do *some* work at all
@@ -90,10 +95,23 @@
         function butts(){
             var width = Number(widthSelect.options[widthSelect.selectedIndex].value);
             var height = Number(heightSelect.options[heightSelect.selectedIndex].value);
-            var tex = new THREE.DataTexture(new Float32Array(width * height * 3), width, height, THREE.RGBFormat, THREE.FloatType);
-            planeMaterial.map = tex;
-            planeMaterial.map.needsUpdate = true;
+            if (planeMaterial.map instanceof THREE.DataTexture) {
+                planeMaterial.map.image.data = createArray(width,height);
+                planeMaterial.map.needsUpdate = true;
+            }
+            else if (planeMaterial.map instanceof THREE.Texture) {
+                var tex = new THREE.DataTexture(createArray(width, height), width, height, THREE.RGBFormat, THREE.FloatType);
+                planeMaterial.map = tex;
+                planeMaterial.map.needsUpdate = true;
+            }
+        }
 
+        function createArray(width, height) {
+            var arr = new Float32Array(width * height * 3);
+            for(var i = 0; i < width * height * 3; i ++){
+                arr[i] = Math.random();
+            }
+            return arr;
         }
 
         render();
